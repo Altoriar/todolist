@@ -1,0 +1,31 @@
+.layout {
+	display: flex;
+	background: #f8f9fa;
+	margin: 24px;
+	border-radius: 4px;
+
+	&-aside {
+		display: flex;
+		flex-direction: column;
+		padding: 24px;
+		max-width: 200px;
+
+		.header-button {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			&-icon {
+				display: flex;
+				font-size: 16px;
+			}
+		}
+	}
+
+	&-main {
+		display: flex;
+		flex-grow: 1;
+		padding: 24px;
+		background: #fff;
+	}
+}
