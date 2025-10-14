@@ -1,15 +1,17 @@
 import type { FC } from 'react';
-import { Container, Navbar, Row } from 'react-bootstrap';
+import { Col, Container, Navbar, Row } from 'react-bootstrap';
 
 import './index.less';
 
 export const Footer: FC = () => {
 	return (
 		<Navbar expand='lg' className='bg-body-tertiary'>
-			<Container>
-				<Row>Altoriar</Row>
-				<Row>版权所有 @xxx</Row>
-				<Row>jsakldfj</Row>
+			<Container className='footer'>
+				<Row className='footer-row'>
+					<Col>Author: Altoriar</Col>
+					<Col>Copyright owner @Altoriar</Col>
+					<Col>Version: v0.0.1</Col>
+				</Row>
 			</Container>
 		</Navbar>
 	);

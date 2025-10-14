@@ -1,14 +1,17 @@
 .layout {
 	display: flex;
-	background: #f8f9fa;
 	margin: 24px;
 	border-radius: 4px;
+	height: calc(100vh - 198px);
 
+	&-menus {
+		margin-right: 24px;
+	}
 	&-aside {
 		display: flex;
 		flex-direction: column;
-		padding: 24px;
-		max-width: 200px;
+		max-width: 240px;
+		border-radius: 8px;
 
 		.header-button {
 			display: flex;
@@ -25,7 +28,7 @@
 	&-main {
 		display: flex;
 		flex-grow: 1;
-		padding: 24px;
-		background: #fff;
+		border-radius: 8px;
+		overflow-y: auto;
 	}
 }

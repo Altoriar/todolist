@@ -4,25 +4,26 @@ import { routes } from '@/routes';
 
 import { Layout } from '@/layout/Layout';
 import { Header } from '@/compnents/Header';
-import { Footer } from '@/compnents/Footer';
+import { Container } from 'react-bootstrap';
 
 const App: FC = () => {
 	return (
-		<Router>
-			<Header />
-			<Routes>
-				<Route path='/' element={<Layout />}>
-					{routes.map((route) => (
-						<Route
-							key={route.path}
-							path={route.path}
-							element={route.element}
-						/>
-					))}
-				</Route>
-			</Routes>
-			<Footer />
-		</Router>
+		<Container>
+			<Router>
+				<Header />
+				<Routes>
+					<Route path='/' element={<Layout />}>
+						{routes.map((route) => (
+							<Route
+								key={route.path}
+								path={route.path}
+								element={route.element}
+							/>
+						))}
+					</Route>
+				</Routes>
+			</Router>
+		</Container>
 	);
 };
 

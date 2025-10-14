@@ -1,16 +1,42 @@
-import type { FC } from 'react';
-import { Container, Navbar, Row } from 'react-bootstrap';
+import { useEffect, type FC } from 'react';
+import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 
 import './index.less';
+import { rootStore, themes } from '@/store';
+import type { Theme } from '@/types';
+import { observer } from 'mobx-react-lite';
 
-export const Header: FC = () => {
+export const Header: FC = observer(() => {
+	const onChangeTheme = (theme: Theme) => {
+		rootStore.changeTheme(theme);
+	};
+
+	useEffect(() => {
+		document.body.setAttribute('data-bs-theme', rootStore.theme.name);
+	}, [rootStore.theme.name]);
+
 	return (
 		<Navbar expand='lg' className='bg-body-tertiary'>
 			<Container>
-				<Row>
-					<Navbar.Brand className='title'>Todo清单</Navbar.Brand>
-				</Row>
+				<Navbar.Brand className='title'>Todo List</Navbar.Brand>
+				<Navbar.Collapse id='basic-navbar-nav'>
+					<Nav className='me-auto'>
+						<NavDropdown
+							id='basic-nav-dropdown'
+							title={rootStore.theme.title}
+						>
+							{themes.map((theme) => (
+								<NavDropdown.Item
+									key={theme.name}
+									onClick={() => onChangeTheme(theme)}
+								>
+									{theme.title}
+								</NavDropdown.Item>
+							))}
+						</NavDropdown>
+					</Nav>
+				</Navbar.Collapse>
 			</Container>
 		</Navbar>
 	);
-};
+});
