@@ -1,5 +1,6 @@
+import { makeAutoObservable, reaction } from 'mobx';
+import { isEmpty } from 'lodash';
 import { storage } from '@/utils';
-import { autorun, makeAutoObservable } from 'mobx';
 
 export interface Todo {
 	id: string;
@@ -12,15 +13,33 @@ export interface Todo {
 }
 
 class TodoStore {
+	keywords: string = '';
 	todos: Todo[] = [];
 
 	constructor() {
 		makeAutoObservable(this);
+
 		this.todos = storage.get('todos', []);
 
-		autorun(() => {
-			storage.set('todos', this.todos);
-		});
+		reaction(
+			() => this.todos,
+			() => {
+				storage.set('todos', this.todos);
+			}
+		);
+	}
+
+	get filterTodos() {
+		if (isEmpty(this.keywords)) return this.todos;
+		return this.todos.filter(
+			(todo) =>
+				todo.title.includes(this.keywords) ||
+				todo.description?.includes(this.keywords)
+		);
+	}
+
+	updateTodos(todos: Todo[] = []) {
+		this.todos = todos;
 	}
 
 	addTodo(todo: Todo) {

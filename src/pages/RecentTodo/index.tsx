@@ -4,10 +4,10 @@ import { todoStore, type Todo } from '@/store/TodoStore';
 import { observer } from 'mobx-react-lite';
 
 import { formatDate } from '@/utils';
-
-import './index.less';
 import { AddTodo } from './AddTodo';
 import { TodoList } from '@/compnents/TodoList';
+
+import './index.less';
 
 export const RecentTodo: FC = observer(() => {
 	const { todos } = todoStore;
@@ -27,6 +27,7 @@ export const RecentTodo: FC = observer(() => {
 				setIsShow={setIsShow}
 				setCurTodo={setCurTodo}
 				onComplete={onComplete}
+				onDrapUpdate={(newTodos) => todoStore.updateTodos(newTodos)}
 			/>
 
 			<Modal
