@@ -1,13 +1,11 @@
 import { useState, type FC } from 'react';
-import { Button, Col, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
 import { todoStore, type Todo } from '@/store/TodoStore';
 import { observer } from 'mobx-react-lite';
 
 import { formatDate } from '@/utils';
 import { AddTodo } from './AddTodo';
 import { TodoList } from '@/compnents/TodoList';
-
-import './index.less';
 
 export const RecentTodo: FC = observer(() => {
 	const { todos } = todoStore;
@@ -20,7 +18,7 @@ export const RecentTodo: FC = observer(() => {
 	};
 
 	return (
-		<div className='recent-todo'>
+		<Container className='w-100 p-2'>
 			<AddTodo />
 			<TodoList
 				todos={todos}
@@ -87,6 +85,6 @@ export const RecentTodo: FC = observer(() => {
 					</Button>
 				</Modal.Footer>
 			</Modal>
-		</div>
+		</Container>
 	);
 });

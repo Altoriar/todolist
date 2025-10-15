@@ -1,13 +1,12 @@
 import { useState, type ElementType, type FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button, Form, Modal, Stack } from 'react-bootstrap';
+import { Button, Container, Form, Modal, Stack } from 'react-bootstrap';
 import { observer } from 'mobx-react-lite';
 import * as CiIcon from 'react-icons/ci';
 import { v4 as uuidv4 } from 'uuid';
 
 import { menuStore } from '@/store/MenuStore';
 
-import './index.less';
 import type { Menu } from '@/types';
 import { isEmpty } from 'lodash';
 
@@ -42,8 +41,8 @@ export const CategoryMenu: FC = observer(() => {
 	const addMenu = () => {};
 
 	return (
-		<div className='catetory-menu'>
-			<Stack gap={4} className='menu-buttons'>
+		<Container className='p-0'>
+			<Stack gap={4} className='d-flex flex-column gap-3'>
 				{menus.map((menu) => {
 					const IconCompnent = (
 						CiIcon as Record<string, ElementType>
@@ -51,24 +50,24 @@ export const CategoryMenu: FC = observer(() => {
 
 					return (
 						<Button
-							className='menu-button'
+							className='d-flex align-items-center justify-content-start gap-3'
 							key={menu.id}
 							variant={getTheme(menu.path)}
 							onClick={() => navigate(menu.path)}
 						>
-							<span className='menu-icon'>
-								{IconCompnent ? <IconCompnent /> : null}
-							</span>
+							{IconCompnent ? (
+								<IconCompnent className='d-flex fs-4' />
+							) : null}
 							{menu.title}
 						</Button>
 					);
 				})}
 				<Button
-					className='create-menu'
+					className='d-flex align-items-center justify-content-start gap-3'
 					variant='light'
 					onClick={() => setIsShow(true)}
 				>
-					<span className='menu-icon'>
+					<span className='d-flex fs-4'>
 						<CiIcon.CiSquarePlus />
 					</span>
 					Create Menu
@@ -134,6 +133,6 @@ export const CategoryMenu: FC = observer(() => {
 					</Button>
 				</Modal.Footer>
 			</Modal>
-		</div>
+		</Container>
 	);
 });

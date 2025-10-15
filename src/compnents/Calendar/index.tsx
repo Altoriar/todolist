@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { useState, type FC } from 'react';
+import { useState, type FC, type FormEvent } from 'react';
 import {
 	Button,
 	Card,
@@ -53,7 +53,9 @@ export const Calendar: FC<CalendarProps> = ({ year, month }) => {
 		setShowModal(true);
 	};
 
-	const onSubmit = () => {
+	const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		e.stopPropagation();
 		if (eventTitle.trim()) {
 			setEvents([...events, { date: selectDate, title: eventTitle }]);
 		}
@@ -82,6 +84,11 @@ export const Calendar: FC<CalendarProps> = ({ year, month }) => {
 							.clone()
 							.date(day)
 							.format('YYYY-MM-DD');
+
+						const isSameDay = moment(today).isSame(
+							displayDate.clone().add(day - 1, 'day'),
+							'day'
+						);
 						return (
 							<Col key={j}>
 								<Card
@@ -89,7 +96,15 @@ export const Calendar: FC<CalendarProps> = ({ year, month }) => {
 									className='p-2'
 									onClick={() => onDayClick(dateStr)}
 								>
-									<div>{day}</div>
+									<div
+										className={`${
+											isSameDay
+												? 'bg-success text-white'
+												: ''
+										} rounded text-center`}
+									>
+										{day}
+									</div>
 									{getEvents(dateStr).map((event, idx) => (
 										<div key={idx}>{event.title}</div>
 									))}
@@ -100,34 +115,37 @@ export const Calendar: FC<CalendarProps> = ({ year, month }) => {
 				</Row>
 			))}
 
-			<Modal show={showModal} onHide={() => setShowModal(false)}>
+			<Modal show={showModal} centered onHide={() => setShowModal(false)}>
 				<Modal.Header closeButton>
 					Create Event {selectDate}
 				</Modal.Header>
 				<Modal.Body>
-					<Form>
+					<Form onSubmit={onSubmit}>
 						<Form.Group>
 							<Form.Label>Event Title</Form.Label>
 							<Form.Control
 								type='text'
 								placeholder='please enter the event title'
 								value={eventTitle}
+								onKeyUp={(e) => {
+									console.log(e.key);
+								}}
 								onChange={(e) => setEventTitle(e.target.value)}
 							/>
 						</Form.Group>
+						<Form.Group className='d-flex mt-4 gap-4 justify-content-end'>
+							<Button
+								variant='outline-dark'
+								onClick={() => setShowModal(false)}
+							>
+								Cancel
+							</Button>
+							<Button variant='success' type='submit'>
+								Confirm
+							</Button>
+						</Form.Group>
 					</Form>
 				</Modal.Body>
-				<Modal.Footer>
-					<Button
-						variant='outline-dark'
-						onClick={() => setShowModal(false)}
-					>
-						Cancel
-					</Button>
-					<Button variant='success' onClick={onSubmit}>
-						Confirm
-					</Button>
-				</Modal.Footer>
 			</Modal>
 		</Container>
 	);

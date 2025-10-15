@@ -1,8 +1,7 @@
 import type { ElementType, FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button, Stack } from 'react-bootstrap';
+import { Button, Container, Stack } from 'react-bootstrap';
 
-import './index.less';
 import { observer } from 'mobx-react-lite';
 import * as CiIcon from 'react-icons/ci';
 import { menuStore } from '@/store/MenuStore';
@@ -22,28 +21,28 @@ export const BaseMenu: FC = observer(() => {
 	};
 
 	return (
-		<div className='base-menu'>
-			<Stack className='menu-buttons' gap={4}>
+		<Container className='p-0'>
+			<Stack gap={4}>
 				{menus.map((menu) => {
 					const IconCompnent = (
 						CiIcon as Record<string, ElementType>
 					)[menu.icon];
 					return (
 						<Button
-							className='menu-button'
+							className='d-flex align-items-center justify-content-start gap-3 flex-grow-1'
 							key={menu.id}
 							variant={getTheme(menu.path)}
 							onClick={() => onJump(menu.path)}
 						>
-							<span className='menu-icon'>
-								{IconCompnent ? <IconCompnent /> : null}
-							</span>
+							{IconCompnent ? (
+								<IconCompnent className='d-flex fs-4' />
+							) : null}
 
 							{menu.title}
 						</Button>
 					);
 				})}
 			</Stack>
-		</div>
+		</Container>
 	);
 });
