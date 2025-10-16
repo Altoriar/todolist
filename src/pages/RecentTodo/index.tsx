@@ -1,90 +1,65 @@
-import { useState, type FC } from 'react';
-import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
+import { useRef, useState, type FC } from 'react';
+import { Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
 import { todoStore, type Todo } from '@/store/TodoStore';
-import { observer } from 'mobx-react-lite';
 
-import { formatDate } from '@/utils';
-import { AddTodo } from './AddTodo';
 import { TodoList } from '@/compnents/TodoList';
+import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+import { TodoModal, type TodoModalRef } from '@/compnents/TodoModal';
+import { observer } from 'mobx-react-lite';
 
 export const RecentTodo: FC = observer(() => {
 	const { todos } = todoStore;
+	const todoModalRef = useRef<TodoModalRef>(null);
 
-	const [curTodo, setCurTodo] = useState<Todo>();
-	const [isShow, setIsShow] = useState(false);
+	const [todoName, setTodoName] = useState('');
 
-	const onComplete = (id: string) => {
-		todoStore.completeTodo(id);
+	const onAddQuickly = (e: React.KeyboardEvent) => {
+		if (todoName.trim() === '') return;
+
+		if (e.key === 'Enter') {
+			const newTodo: Todo = {
+				id: uuidv4(),
+				title: todoName.trim(),
+				completed: false,
+				createTime: moment().unix(),
+				modifyTime: moment().unix(),
+			};
+
+			todoStore.addTodo(newTodo);
+			setTodoName('');
+		}
 	};
 
 	return (
 		<Container className='w-100 p-2'>
-			<AddTodo />
-			<TodoList
-				todos={todos}
-				setIsShow={setIsShow}
-				setCurTodo={setCurTodo}
-				onComplete={onComplete}
-				onDrapUpdate={(newTodos) => todoStore.updateTodos(newTodos)}
-			/>
+			<Row className='mb-2'>
+				<Col>
+					<InputGroup>
+						<Form.Control
+							type='text'
+							placeholder='add todo quickly'
+							value={todoName}
+							onChange={(e) => {
+								const { value } = e.target;
+								setTodoName(value);
+							}}
+							onKeyUp={onAddQuickly}
+						/>
+					</InputGroup>
+				</Col>
+				<Col>
+					<Button
+						variant='success'
+						onClick={() => todoModalRef.current?.show()}
+					>
+						Add Todo
+					</Button>
+				</Col>
+			</Row>
 
-			<Modal
-				backdrop='static'
-				show={isShow}
-				onHide={() => setIsShow(false)}
-			>
-				<Modal.Body>
-					<Row>
-						<Col>Are you sure you want to delete Todo?</Col>
-					</Row>
-					<Row>
-						<Col>Todo Title: {curTodo?.title}</Col>
-					</Row>
-					<Row>
-						<Col>Description: {curTodo?.title}</Col>
-					</Row>
-					<Row>
-						<Col>
-							Status:{' '}
-							{curTodo?.completed ? 'completed' : 'incomplete'}
-						</Col>
-					</Row>
-					<Row>
-						{curTodo?.deadline ? (
-							<Col>Deadline: {formatDate(curTodo?.deadline)}</Col>
-						) : null}
-					</Row>
-					<Row>
-						<Col>
-							Create Time: {formatDate(curTodo?.createTime)}
-						</Col>
-					</Row>
-					<Row>
-						<Col>
-							Modify Time: {formatDate(curTodo?.modifyTime)}
-						</Col>
-					</Row>
-				</Modal.Body>
-				<Modal.Footer>
-					<Button
-						size='sm'
-						variant='secondary'
-						onClick={() => setIsShow(false)}
-					>
-						Cancel
-					</Button>
-					<Button
-						size='sm'
-						variant='danger'
-						onClick={() => {
-							todoStore.removeTodo(curTodo?.id);
-							setIsShow(false);
-						}}
-					>
-						Delete
-					</Button>
-				</Modal.Footer>
-			</Modal>
+			<TodoList todos={todos} />
+			<TodoModal ref={todoModalRef} />
 		</Container>
 	);
 });

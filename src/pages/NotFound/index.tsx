@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 
-import './index.less';
 import { CiFileOff } from 'react-icons/ci';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,9 +11,13 @@ export const NotFound: FC = () => {
 	};
 
 	return (
-		<div className='not-found' onClick={onJump}>
-			<CiFileOff className='not-found-icon' /> The page is not found.
-			Click to jump to the homepage.
+		<div
+			style={{ color: '#ccc', cursor: 'pointer' }}
+			className='d-flex align-items-center justify-content-center h-100 w-100 fs-4'
+			onClick={onJump}
+		>
+			<CiFileOff className='fs-1' /> The page is not found. Click to jump
+			to the homepage.
 		</div>
 	);
 };

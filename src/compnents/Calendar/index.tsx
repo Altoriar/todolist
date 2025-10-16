@@ -9,8 +9,9 @@ import {
 	Modal,
 	Row,
 } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
 
-interface CalendarEvent {
+export interface CalendarEvent {
 	date: string;
 	title: string;
 }
@@ -18,14 +19,24 @@ interface CalendarEvent {
 interface CalendarProps {
 	year?: number;
 	month?: number; // 1-12
+	date?: number; // 1-31
+	dataSource?: CalendarEvent[];
 }
 
-export const Calendar: FC<CalendarProps> = ({ year, month }) => {
+export const Calendar: FC<CalendarProps> = ({
+	year,
+	month,
+	date,
+	dataSource,
+}) => {
 	const today = moment();
-	const displayDate = moment({
-		year: year ? year : today.year(),
-		month: month ? month - 1 : today.month(),
-	});
+	const [displayDate, setDisplayDate] = useState(
+		moment({
+			year: year ? year : today.year(),
+			month: month ? month - 1 : today.month(),
+			date: date ? date : today.date(),
+		})
+	);
 
 	// 获取当月第一天和天数
 	const firstDayOfMonth = displayDate.clone().startOf('month').day();
@@ -35,6 +46,7 @@ export const Calendar: FC<CalendarProps> = ({ year, month }) => {
 	const calendarDays: (number | null)[] = [];
 	for (let i = 0; i < firstDayOfMonth; i++) calendarDays.push(null);
 	for (let d = 1; d <= dayInMonth; d++) calendarDays.push(d);
+	for (let j = calendarDays.length; j < 35; j++) calendarDays.push(null);
 
 	// 按周分组
 	const weeks: (number | null)[][] = [];
@@ -42,12 +54,12 @@ export const Calendar: FC<CalendarProps> = ({ year, month }) => {
 		weeks.push(calendarDays.slice(i, i + 7));
 	}
 
-	const [events, setEvents] = useState<CalendarEvent[]>([]);
+	const [events, setEvents] = useState<CalendarEvent[]>(dataSource || []);
 	const [selectDate, setSelectDate] = useState('');
 	const [showModal, setShowModal] = useState(false);
 	const [eventTitle, setEventTitle] = useState('');
 
-	const onDayClick = (dateStr: string) => {
+	const onDateClick = (dateStr: string) => {
 		setSelectDate(dateStr);
 		setEventTitle('');
 		setShowModal(true);
@@ -65,9 +77,29 @@ export const Calendar: FC<CalendarProps> = ({ year, month }) => {
 	const getEvents = (dateStr: string) =>
 		events.filter((event) => event.date === dateStr);
 
+	const isSameDay = (day: number) =>
+		moment(today).isSame(displayDate.clone().date(day), 'day');
+
 	return (
 		<Container>
-			<h3 className='mb-3'>{displayDate.format('YYYY年 MM月')}</h3>
+			<Row className='g-3 mb-3' xs={2} md={4} lg={6}>
+				<Col>
+					<h3>Overview</h3>
+				</Col>
+				<Col>
+					<DatePicker
+						className='form-control'
+						name='deadline'
+						selected={moment(displayDate).toDate()}
+						onChange={(date) => setDisplayDate(moment(date))}
+						dateFormat='yyyy/MM/dd'
+						placeholderText='Please select a date'
+						showMonthDropdown
+						showYearDropdown
+						dropdownMode='select'
+					/>
+				</Col>
+			</Row>
 			<Row className='fw-bold text-center mb-4'>
 				{['日', '一', '二', '三', '四', '五', '六'].map((d) => (
 					<Col key={d} className='p-2'>
@@ -85,20 +117,16 @@ export const Calendar: FC<CalendarProps> = ({ year, month }) => {
 							.date(day)
 							.format('YYYY-MM-DD');
 
-						const isSameDay = moment(today).isSame(
-							displayDate.clone().add(day - 1, 'day'),
-							'day'
-						);
 						return (
 							<Col key={j}>
 								<Card
 									style={{ cursor: 'pointer' }}
 									className='p-2'
-									onClick={() => onDayClick(dateStr)}
+									onClick={() => onDateClick(dateStr)}
 								>
 									<div
 										className={`${
-											isSameDay
+											isSameDay(day)
 												? 'bg-success text-white'
 												: ''
 										} rounded text-center`}
@@ -127,9 +155,6 @@ export const Calendar: FC<CalendarProps> = ({ year, month }) => {
 								type='text'
 								placeholder='please enter the event title'
 								value={eventTitle}
-								onKeyUp={(e) => {
-									console.log(e.key);
-								}}
 								onChange={(e) => setEventTitle(e.target.value)}
 							/>
 						</Form.Group>

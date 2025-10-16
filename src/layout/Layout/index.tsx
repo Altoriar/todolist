@@ -10,7 +10,7 @@ export const Layout: FC = () => {
 	return (
 		<Container
 			style={{ height: 'calc(100vh - 128px)' }}
-			className='d-flex m-4 rounded'
+			className='d-flex rounded'
 		>
 			<Card className='me-4 p-2'>
 				<Card.Body>

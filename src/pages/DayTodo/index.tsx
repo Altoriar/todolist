@@ -1,5 +1,21 @@
 import type { FC } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import { observer } from 'mobx-react-lite';
 
-export const DayTodo: FC = () => {
-	return <div className='day-todo'>day todo</div>;
-};
+import { TodoList } from '@/compnents/TodoList';
+import { todoStore } from '@/store/TodoStore';
+
+export const DayTodo: FC = observer(() => {
+	const { dayTodos } = todoStore;
+
+	return (
+		<Container className='w-100 p-2'>
+			<Row className='mb-2'>
+				<Col>
+					<h3>Day Todo</h3>
+				</Col>
+			</Row>
+			<TodoList todos={dayTodos} />
+		</Container>
+	);
+});

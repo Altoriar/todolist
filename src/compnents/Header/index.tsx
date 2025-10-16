@@ -1,7 +1,6 @@
 import { useEffect, type FC } from 'react';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 
-import './index.less';
 import { rootStore, themes } from '@/store';
 import type { Theme } from '@/types';
 import { observer } from 'mobx-react-lite';
@@ -13,10 +12,11 @@ export const Header: FC = observer(() => {
 
 	useEffect(() => {
 		document.body.setAttribute('data-bs-theme', rootStore.theme.name);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rootStore.theme.name]);
 
 	return (
-		<Navbar expand='lg' className='bg-body-tertiary'>
+		<Navbar expand='lg' className='bg-body-tertiary mb-4 mt-4'>
 			<Container>
 				<Navbar.Brand className='title'>Todo List</Navbar.Brand>
 				<Navbar.Collapse id='basic-navbar-nav'>

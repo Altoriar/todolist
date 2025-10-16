@@ -1,6 +1,7 @@
-import { makeAutoObservable, reaction } from 'mobx';
+import { makeAutoObservable, reaction, toJS } from 'mobx';
 import { isEmpty } from 'lodash';
 import { storage } from '@/utils';
+import moment from 'moment';
 
 export interface Todo {
 	id: string;
@@ -22,11 +23,23 @@ class TodoStore {
 		this.todos = storage.get('todos', []);
 
 		reaction(
-			() => this.todos,
+			() => toJS(this.todos),
 			() => {
 				storage.set('todos', this.todos);
 			}
 		);
+	}
+
+	get dayTodos() {
+		return this.todos.filter(
+			(todo) =>
+				todo.createTime > moment().startOf('day').unix() &&
+				todo.createTime < moment().endOf('day').unix()
+		);
+	}
+
+	get noDateTodos() {
+		return this.todos.filter((todo) => !todo?.deadline);
 	}
 
 	get filterTodos() {

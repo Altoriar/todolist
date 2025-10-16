@@ -70,7 +70,7 @@ export const CategoryMenu: FC = observer(() => {
 					<span className='d-flex fs-4'>
 						<CiIcon.CiSquarePlus />
 					</span>
-					Create Menu
+					Add Menu
 				</Button>
 			</Stack>
 
@@ -129,7 +129,7 @@ export const CategoryMenu: FC = observer(() => {
 						Close
 					</Button>
 					<Button variant='success' onClick={addMenu}>
-						Create
+						Add
 					</Button>
 				</Modal.Footer>
 			</Modal>
