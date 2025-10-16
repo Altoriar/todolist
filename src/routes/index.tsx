@@ -1,7 +1,6 @@
 import type { RouteObject } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 
-import { Home } from '@/pages/Home';
 import { RecentTodo } from '@/pages/RecentTodo';
 import { DayTodo } from '@/pages/DayTodo';
 import { Overview } from '@/pages/Overview';
@@ -13,11 +12,7 @@ import { NotFound } from '@/pages/NotFound';
 export const routes: RouteObject[] = [
 	{
 		path: '/',
-		element: <Navigate to='/home' />,
-	},
-	{
-		path: '/home',
-		element: <Home />,
+		element: <Navigate to='/overview' />,
 	},
 	{
 		path: '/day_todo',
